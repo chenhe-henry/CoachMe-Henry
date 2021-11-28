@@ -73,31 +73,33 @@ export default {
     },
   },
   methods: {
-    navToList(e) {
-      this.selectedCoach = e;
+    navToList(coachInfo) {
+      this.selectedCoach = coachInfo;
     },
     backToHome() {
       this.selectedCoach = null;
     },
     // restructure coach data based on filtered data
-    getCoachInfo(obj) {
+    getCoachInfo(filteredCoachData) {
       let availability = [];
-      obj.forEach((e) => {
-        availability.push(e["day_of_week"]);
+      filteredCoachData.forEach((data) => {
+        availability.push(data["day_of_week"]);
       });
       return {
-        name: obj[0].name,
-        timezone: obj[0].timezone,
+        name: filteredCoachData[0].name,
+        timezone: filteredCoachData[0].timezone,
         availability: [...new Set(availability)],
       };
     },
     // get simple coach data, pass to coach list,
     formatData() {
-      const coachArr = this.coachData.map((e) => e.name);
+      const coachArr = this.coachData.map((data) => data.name);
       let coaches = [...new Set(coachArr)];
-      coaches.forEach((e) =>
+      coaches.forEach((coach) =>
         this.coachSimpleData.push(
-          this.getCoachInfo(this.coachData.filter((el) => el.name === e))
+          this.getCoachInfo(
+            this.coachData.filter((data) => data.name === coach)
+          )
         )
       );
     },

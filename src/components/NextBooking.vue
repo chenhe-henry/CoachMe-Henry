@@ -4,12 +4,14 @@
     <div class="card pointer booking-card" @click="navToList">
       <div>
         <div
-          v-for="item in confirmationKeys"
-          :key="item.label"
+          v-for="bookingResult in confirmationKeys"
+          :key="bookingResult.label"
           class="booking-card__item"
         >
-          {{ item.label }}: {{ bookInfo[item.value] }}
-          <span v-if="item.note">({{ bookInfo[item.note] }})</span>
+          {{ bookingResult.label }}: {{ bookInfo[bookingResult.value] }}
+          <span v-if="bookingResult.note"
+            >({{ bookInfo[bookingResult.note] }})</span
+          >
         </div>
       </div>
     </div>

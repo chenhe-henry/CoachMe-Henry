@@ -55,14 +55,16 @@
       v-if="bookingInfo"
     >
       <h1
-        v-for="item in confirmationKeys"
-        :key="item.label"
+        v-for="bookingResult in confirmationKeys"
+        :key="bookingResult.label"
         class="booking-detail"
       >
-        <div>{{ item.label }}:</div>
+        <div>{{ bookingResult.label }}:</div>
         <div>
-          <span>{{ bookingInfo[item.value] }}</span>
-          <span v-if="item.note">({{ bookingInfo[item.note] }})</span>
+          <span>{{ bookingInfo[bookingResult.value] }}</span>
+          <span v-if="bookingResult.note"
+            >({{ bookingInfo[bookingResult.note] }})</span
+          >
         </div>
       </h1>
       <span slot="footer" class="dialog-footer">
@@ -112,7 +114,8 @@ export default {
   computed: {
     // filter all the data in specific day
     availability() {
-      return (day) => this.filteredData.filter((e) => e["day_of_week"] === day);
+      return (day) =>
+        this.filteredData.filter((data) => data["day_of_week"] === day);
     },
     selectedCoachInfo() {
       return (
@@ -170,8 +173,8 @@ export default {
       done();
     },
 
-    bookCoach(e, time, timezoneTime) {
-      let { name, timezone, day_of_week } = e;
+    bookCoach(availabilityInfo, time, timezoneTime) {
+      let { name, timezone, day_of_week } = availabilityInfo;
       let bookInfo = {
         name,
         timezone,
@@ -197,13 +200,13 @@ export default {
     },
 
     // get availability with 30 mins step
-    getAvailability(arr) {
-      let result = [];
-      arr.forEach((e) => {
-        let start = this.$moment(e["available_at"], "h:mma");
-        let end = this.$moment(e["available_until"], "h:mma");
+    getAvailability(availabilityArr) {
+      let timeSlots = [];
+      availabilityArr.forEach((ava) => {
+        let start = this.$moment(ava["available_at"], "h:mma");
+        let end = this.$moment(ava["available_until"], "h:mma");
         while (start.isBefore(end)) {
-          result.push(this.$moment(start, "h:mma").clone().format("h:mm A"));
+          timeSlots.push(this.$moment(start, "h:mma").clone().format("h:mm A"));
           start = this.$moment(
             this.$moment(start, "h:mma")
               .clone()
@@ -213,7 +216,7 @@ export default {
           );
         }
       });
-      return result;
+      return timeSlots;
     },
   },
 };
