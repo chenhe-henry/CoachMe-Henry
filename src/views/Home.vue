@@ -1,14 +1,24 @@
 <template>
   <el-container class="home">
     <el-header>Coach Me</el-header>
-
     <el-main>
-      <CoachList :coachSimpleData="coachSimpleData" @click="selectCoach" />
+      <CoachList
+        :coachSimpleData="coachSimpleData"
+        @click="selectCoach"
+        v-show="!selectedCoach"
+      />
+      <TimeTable
+        :selectedCoach="selectedCoach"
+        :filteredData="filteredData"
+        v-show="selectedCoach"
+        @back="back"
+        @confirm="confirm"
+      />
     </el-main>
-    <el-footer
-      ><font-awesome-icon :icon="['far', 'copyright']" class="mx-2" /> 2021
-      Henry He, All Right Reserved.</el-footer
-    >
+    <el-footer>
+      <font-awesome-icon :icon="['far', 'copyright']" class="mx-2" />
+      2021 Henry He, All Right Reserved.
+    </el-footer>
   </el-container>
 </template>
 
@@ -18,9 +28,12 @@ export default {
   name: "Home",
   components: {
     CoachList: () => import("@/components/CoachList"),
+    TimeTable: () => import("@/components/TimeTable.vue"),
   },
   data() {
     return {
+      selectedCoach: null,
+      bookInfo: null,
       coachData: [],
       coachSimpleData: [],
     };
@@ -28,11 +41,26 @@ export default {
   mounted() {
     this.init();
   },
+  computed: {
+    // filter coach data based on selected coach
+    filteredData() {
+      let result;
+      if (this.selectedCoach) {
+        result = this.coachData.filter(
+          (el) => el.name === this.selectedCoach.name
+        );
+      }
+      return result;
+    },
+  },
   methods: {
     selectCoach(e) {
       this.selectedCoach = e;
-      console.log("e :>> ", e);
     },
+    back() {
+      this.selectedCoach = null;
+    },
+    confirm() {},
     // restructure coach data based on filtered data
     getCoachInfo(obj) {
       let availablity = [];
@@ -45,6 +73,7 @@ export default {
         availablity: [...new Set(availablity)],
       };
     },
+    // get simple coach data, pass to coach list,
     formatData() {
       const coachArr = this.coachData.map((e) => e.name);
       let coaches = [...new Set(coachArr)];
