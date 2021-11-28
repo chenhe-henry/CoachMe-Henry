@@ -30,7 +30,7 @@ A simple coach booking application, which allows you to
 
 ### Check available coaches
 
-You can see all the available coaches at homepage, with their brief info (name, timezone, availablility)
+You can see all the available coaches at homepage, with their brief info (name, timezone, availablility).
 
 Click the coach card to check the detail time slot.
 
@@ -55,7 +55,7 @@ If you click 'confirm', the booking info will store in localstorage and the page
 
 In the confirmation dialog, you can see time slots at both your selected location and coach's location.
 
-## Tools used
+## Tech && Tools used
 
 - Vue.js
 - Vuex
