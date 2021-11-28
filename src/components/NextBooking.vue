@@ -2,9 +2,15 @@
   <div>
     <h1 class="booking-title">Your next booking is:</h1>
     <div class="card pointer booking-card" @click="open">
-      <div v-for="item in confirmationKeys" :key="item.label">
-        {{ item.label }}: {{ bookInfo[item.value] }}
-        <span v-if="item.note">({{ bookInfo[item.note] }})</span>
+      <div>
+        <div
+          v-for="item in confirmationKeys"
+          :key="item.label"
+          class="booking-card__item"
+        >
+          {{ item.label }}: {{ bookInfo[item.value] }}
+          <span v-if="item.note">({{ bookInfo[item.note] }})</span>
+        </div>
       </div>
     </div>
   </div>
@@ -40,13 +46,17 @@ export default {
     margin-bottom: 0.5rem;
   }
   &-card {
+    padding: 4rem 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #36a2e0;
     color: #ffffff;
     font-weight: 600;
     text-align: left;
     transition: all 0.2s;
-    & > * {
-      margin: 0.1rem 0;
+    &__item {
+      margin: 0.5rem 0;
     }
     &:hover {
       transform: scale(1.1);

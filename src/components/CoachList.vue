@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Available Coaches</h1>
+    <div class="title">Available Coaches</div>
     <div class="coach-list">
       <div
         v-for="coach in coachSimpleData"
@@ -91,6 +91,7 @@ export default {
       transform: scale(1.1);
     }
     &-name {
+      font-weight: bold;
       grid-column: 1/2;
       grid-row: 2/3;
     }
@@ -107,14 +108,17 @@ export default {
     }
   }
   &-list {
+    grid-gap: 2rem;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-row-gap: 2rem;
-    grid-column-gap: 5rem;
-    width: 50vw;
     margin: 0 auto;
     padding: 4rem 0;
     border-radius: 10px;
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 1440px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 }
 </style>

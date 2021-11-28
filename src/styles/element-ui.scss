@@ -33,6 +33,8 @@
 
 .el-dialog__body {
   text-align: left;
+
+  color: #000000;
   & > * {
     margin: 0.5rem 0;
   }
@@ -51,8 +53,8 @@
 .el-dialog__header {
   text-align: left;
   background: #36a2e0;
+  border-radius: 10px 10px 0 0;
 }
-
-.el-main {
-  // background: linear-gradient(#eb4970, #f6880e);
+.el-dialog {
+  border-radius: 10px;
 }

@@ -1,7 +1,6 @@
 <template>
   <div>
     <div>
-      <div class="title">Coach</div>
       <div class="title">{{ selectedCoachInfo }}</div>
       <div class="display">30 Minute Time Slots</div>
       <!-- select time zone -->
@@ -53,12 +52,18 @@
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :before-close="closeDialog"
-      width="30%"
       v-if="bookingInfo"
     >
-      <h1 v-for="item in confirmationKeys" :key="item.label">
-        {{ item.label }}: {{ bookingInfo[item.value] }}
-        <span v-if="item.note">({{ bookingInfo[item.note] }})</span>
+      <h1
+        v-for="item in confirmationKeys"
+        :key="item.label"
+        class="booking-detail"
+      >
+        <div>{{ item.label }}:</div>
+        <div>
+          <span>{{ bookingInfo[item.value] }}</span>
+          <span v-if="item.note">({{ bookingInfo[item.note] }})</span>
+        </div>
       </h1>
       <span slot="footer" class="dialog-footer">
         <el-button type="warning" @click="cancelDialog">Cancel</el-button>
@@ -151,14 +156,8 @@ export default {
     confirmDialog() {
       this.dialogVisible = false;
       localStorage.setItem("bookInfo", JSON.stringify(this.bookingInfo));
-      //   this.$message({
-      //     message: "Congrats",
-      //     type: "primary",
-      //     duration: `${this.messageDuration}`,
-      //   });
       this.$notify({
         title: "Congrats",
-        //   message: 'Congrats',
         type: "success",
         position: "bottom-right",
         duration: `${this.messageDuration}`,
@@ -248,6 +247,22 @@ export default {
   margin: 0 auto;
   & > * {
     flex-basis: 12%;
+  }
+}
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+}
+.booking-detail {
+  display: flex;
+  flex-direction: column;
+
+  padding: 1rem 0;
+  & > div {
+    margin-right: 0.5rem;
+  }
+  @media (min-width: 1024px) {
+    flex-direction: row;
   }
 }
 </style>
