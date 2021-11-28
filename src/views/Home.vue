@@ -12,7 +12,6 @@
         :filteredData="filteredData"
         v-show="selectedCoach"
         @back="back"
-        @confirm="confirm"
       />
     </el-main>
     <el-footer>
@@ -60,7 +59,6 @@ export default {
     back() {
       this.selectedCoach = null;
     },
-    confirm() {},
     // restructure coach data based on filtered data
     getCoachInfo(obj) {
       let availablity = [];

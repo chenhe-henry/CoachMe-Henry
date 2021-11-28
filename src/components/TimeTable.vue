@@ -1,15 +1,23 @@
 <template>
   <div>
-    <div v-if="!showConfirmation">
+    <div>
       <button @click="back">Back To List</button>
       <h1>{{ selectedCoachInfo }}</h1>
+      <!-- select time zone -->
       <label for="location"> Choose your location: </label>
-      <select id="location" v-model="selectedLocation">
-        <option v-for="city in cityOption" :key="city" :value="city">
-          {{ city }}
-        </option>
-      </select>
-
+      <el-select
+        v-model="selectedLocation"
+        :placeholder="selectedLocation"
+        id="location"
+      >
+        <el-option
+          v-for="city in cityOption"
+          :key="city"
+          :label="city"
+          :value="city"
+        />
+      </el-select>
+      <!-- time slot list -->
       <div class="table-head">
         <div v-for="th in tableHead" :key="th">{{ th }}</div>
       </div>
@@ -35,15 +43,24 @@
         </div>
       </div>
     </div>
-    <div v-else class="confirmation">
-      <h1>Booking Details</h1>
+
+    <el-dialog
+      title="Booking Details"
+      :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
+      :before-close="closeDialog"
+      width="50%"
+      v-if="bookingInfo"
+    >
       <h1 v-for="item in confirmationKeys" :key="item.label">
         {{ item.label }}: {{ bookingInfo[item.value] }}
         <span v-if="item.note">({{ bookingInfo[item.note] }})</span>
       </h1>
-      <button @click="changeBooking">Change Booking</button>
-      <button @click="confirm">Confirm</button>
-    </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="warning" @click="cancelDialog">Cancel</el-button>
+        <el-button type="primary" @click="confirmDialog">Confirm</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -66,7 +83,7 @@ export default {
       ],
       bookingInfo: null,
       selectedTimeSlot: {},
-      showConfirmation: false,
+      dialogVisible: false,
       confirmationKeys: [
         { label: "Day", value: "day_of_week" },
         { label: "Name", value: "name" },
@@ -99,7 +116,7 @@ export default {
   },
   watch: {
     bookingInfo() {
-      this.selectedTimeSlot = JSON.parse(localStorage.getItem("bookInfo"));
+      this.selectedTimeSlot = JSON.parse(localStorage.getItem("TempBookInfo"));
       this.$emit("toggleBook", this.bookingInfo);
     },
     selectedCoach() {
@@ -113,6 +130,10 @@ export default {
     this.bookingInfo = JSON.parse(localStorage.getItem("bookInfo"));
   },
   methods: {
+    checkActiveSlot(done) {
+      this.selectedTimeSlot = JSON.parse(localStorage.getItem("TempBookInfo"));
+      done();
+    },
     // change timezone
     timeTZ(time) {
       return this.$moment(time, "h:mm a")
@@ -120,15 +141,31 @@ export default {
         .tz(this.selectedLocation)
         .format("h:mm A");
     },
-    confirm() {
-      this.$emit("confirm");
+    // dialog control
+    confirmDialog() {
+      this.dialogVisible = false;
+      localStorage.setItem("bookInfo", JSON.stringify(this.bookingInfo));
+      this.$message({
+        message: "Congrats",
+        type: "success",
+      });
     },
+    cancelDialog() {
+      this.dialogVisible = false;
+      let previousSlot = localStorage.getItem("bookInfo");
+      localStorage.setItem("TempBookInfo", previousSlot);
+      this.selectedTimeSlot = JSON.parse(localStorage.getItem("TempBookInfo"));
+    },
+    closeDialog(done) {
+      this.cancelDialog();
+      done();
+    },
+
+    //
     back() {
       this.$emit("back");
     },
-    changeBooking() {
-      this.showConfirmation = false;
-    },
+
     bookCoach(e, time, timezoneTime) {
       let { name, timezone, day_of_week } = e;
       let bookInfo = {
@@ -144,11 +181,10 @@ export default {
       if (JSON.stringify(previousSlot) === JSON.stringify(this.bookingInfo)) {
         this.bookingInfo = null;
         localStorage.removeItem("bookInfo");
+        localStorage.removeItem("TempBookInfo");
       } else {
-        localStorage.setItem("bookInfo", JSON.stringify(bookInfo));
-        setTimeout(() => {
-          this.showConfirmation = true;
-        }, 100);
+        this.dialogVisible = true;
+        localStorage.setItem("TempBookInfo", JSON.stringify(bookInfo));
       }
     },
 
