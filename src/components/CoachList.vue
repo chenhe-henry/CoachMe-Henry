@@ -10,14 +10,12 @@
       >
         <font-awesome-icon icon="user" class="mx-2" />
         <font-awesome-icon icon="calendar-alt" class="mx-2" />
-
         <div class="coach_card-name">
           {{ coach.name }}
         </div>
         <div class="coach_card-timezone">
           {{ coach.timezone }}
         </div>
-
         <div class="coach_card-availability">
           <el-col
             v-for="day in coach.availability"
@@ -39,14 +37,10 @@ export default {
   props: {
     coachSimpleData: { type: Array, default: () => [] },
   },
-  data() {
-    return {};
-  },
-
   methods: {
     // emit selected coach's name/timezone info to parent
     getCoach(e) {
-      this.$emit("click", { name: e.name, timezone: e.timezone });
+      this.$emit("getCoach", { name: e.name, timezone: e.timezone });
     },
     convertDay(day) {
       if (day === "Monday") {
@@ -82,7 +76,6 @@ export default {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-
     & > div {
       text-align: left;
     }

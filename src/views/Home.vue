@@ -2,26 +2,26 @@
   <el-container class="home">
     <el-header>
       <span>Coach Me</span>
-      <el-button type="info" @click="back" v-show="selectedCoach">
+      <el-button type="info" @click="backToHome" v-show="selectedCoach">
         Back To List
       </el-button>
     </el-header>
     <el-main>
       <CoachList
         :coachSimpleData="coachSimpleData"
-        @click="selectCoach"
         v-show="!selectedCoach"
+        @getCoach="navToList"
       />
       <TimeTable
         :selectedCoach="selectedCoach"
         :filteredData="filteredData"
         v-show="selectedCoach"
-        @back="back"
+        @back="backToHome"
       />
       <NextBooking
         v-if="!selectedCoach && bookInfo"
         :bookInfo="bookInfo"
-        @open="open"
+        @navTo="navToList"
       />
     </el-main>
     <el-footer>
@@ -70,13 +70,10 @@ export default {
     },
   },
   methods: {
-    selectCoach(e) {
+    navToList(e) {
       this.selectedCoach = e;
     },
-    open(e) {
-      this.selectedCoach = e;
-    },
-    back() {
+    backToHome() {
       this.selectedCoach = null;
     },
     // restructure coach data based on filtered data

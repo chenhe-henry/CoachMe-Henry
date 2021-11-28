@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="booking-title">Your next booking is:</h1>
-    <div class="card pointer booking-card" @click="open">
+    <div class="card pointer booking-card" @click="navToList">
       <div>
         <div
           v-for="item in confirmationKeys"
@@ -21,17 +21,12 @@ export default {
   props: { bookInfo: { type: Object, default: () => {} } },
   data() {
     return {
-      confirmationKeys: [
-        { label: "Name", value: "name" },
-        { label: "Day", value: "day_of_week" },
-        { label: "My time", value: "timezoneTime", note: "myTimezone" },
-        { label: "Coach's time", value: "time", note: "timezone" },
-      ],
+      confirmationKeys: this.$store.state.cardEntries,
     };
   },
   methods: {
-    open() {
-      this.$emit("open", {
+    navToList() {
+      this.$emit("navTo", {
         name: this.bookInfo.name,
         timezone: this.bookInfo.timezone,
       });

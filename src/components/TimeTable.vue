@@ -22,13 +22,13 @@
       </div>
       <!-- time slot list -->
       <div class="table-head">
-        <div v-for="th in tableHead" :key="th">{{ th }}</div>
+        <div v-for="day in tableHead" :key="day">{{ day }}</div>
       </div>
       <div class="table-body">
-        <div v-for="(th, index) in tableHead" :key="index">
-          <div v-if="availability(th).length > 0">
+        <div v-for="(day, index) in tableHead" :key="index">
+          <div v-if="availability(day).length > 0">
             <div
-              v-for="slot in getAvailability(availability(th))"
+              v-for="slot in getAvailability(availability(day))"
               :key="slot"
               class="time-slot"
               :class="{
@@ -36,9 +36,9 @@
                   selectedTimeSlot &&
                   selectedTimeSlot.name === selectedCoach.name &&
                   selectedTimeSlot.time === slot &&
-                  selectedTimeSlot['day_of_week'] === th,
+                  selectedTimeSlot['day_of_week'] === day,
               }"
-              @click="bookCoach(availability(th)[0], slot, timeTZ(slot))"
+              @click="bookCoach(availability(day)[0], slot, timeTZ(slot))"
             >
               {{ timeTZ(slot) }}
             </div>
@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-
+    <!-- confirmation dialog -->
     <el-dialog
       title="Booking Details"
       :visible.sync="dialogVisible"
@@ -93,12 +93,7 @@ export default {
       bookingInfo: null,
       selectedTimeSlot: {},
       dialogVisible: false,
-      confirmationKeys: [
-        { label: "Name", value: "name" },
-        { label: "Day", value: "day_of_week" },
-        { label: "My time", value: "timezoneTime", note: "myTimezone" },
-        { label: "Coach's time", value: "time", note: "timezone" },
-      ],
+      confirmationKeys: this.$store.state.cardEntries,
       cityOption: [
         "Australia/Sydney",
         "Australia/Melbourne",
@@ -115,6 +110,7 @@ export default {
     };
   },
   computed: {
+    // filter all the data in specific day
     availability() {
       return (day) => this.filteredData.filter((e) => e["day_of_week"] === day);
     },
@@ -128,9 +124,9 @@ export default {
   watch: {
     bookingInfo() {
       this.selectedTimeSlot = JSON.parse(localStorage.getItem("TempBookInfo"));
-      this.$emit("toggleBook", this.bookingInfo);
     },
     selectedCoach() {
+      // set default timezone based on the selected Coach's timezone
       if (this.selectedCoach) {
         this.selectedLocation = this.selectedCoach.timezone;
         this.$moment.tz.setDefault(this.selectedCoach.timezone);
@@ -141,10 +137,6 @@ export default {
     this.bookingInfo = JSON.parse(localStorage.getItem("bookInfo"));
   },
   methods: {
-    checkActiveSlot(done) {
-      this.selectedTimeSlot = JSON.parse(localStorage.getItem("TempBookInfo"));
-      done();
-    },
     // change timezone
     timeTZ(time) {
       return this.$moment(time, "h:mm a")
@@ -172,12 +164,11 @@ export default {
       localStorage.setItem("TempBookInfo", previousSlot);
       this.selectedTimeSlot = JSON.parse(localStorage.getItem("TempBookInfo"));
     },
+    // close dialog with ESC
     closeDialog(done) {
       this.cancelDialog();
       done();
     },
-
-    //
 
     bookCoach(e, time, timezoneTime) {
       let { name, timezone, day_of_week } = e;
