@@ -1,22 +1,26 @@
 <template>
   <div>
     <div>
-      <button @click="back">Back To List</button>
-      <h1>{{ selectedCoachInfo }}</h1>
+      <div class="title">Coach</div>
+      <div class="title">{{ selectedCoachInfo }}</div>
+      <div class="display">30 Minute Time Slots</div>
       <!-- select time zone -->
-      <label for="location"> Choose your location: </label>
-      <el-select
-        v-model="selectedLocation"
-        :placeholder="selectedLocation"
-        id="location"
-      >
-        <el-option
-          v-for="city in cityOption"
-          :key="city"
-          :label="city"
-          :value="city"
-        />
-      </el-select>
+      <div class="rightAlign">
+        <span><font-awesome-icon icon="map-marker-alt" class="mx-2" /></span>
+        <label for="location"> Choose your location: </label>
+        <el-select
+          v-model="selectedLocation"
+          :placeholder="selectedLocation"
+          id="location"
+        >
+          <el-option
+            v-for="city in cityOption"
+            :key="city"
+            :label="city"
+            :value="city"
+          />
+        </el-select>
+      </div>
       <!-- time slot list -->
       <div class="table-head">
         <div v-for="th in tableHead" :key="th">{{ th }}</div>
@@ -49,7 +53,7 @@
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :before-close="closeDialog"
-      width="50%"
+      width="30%"
       v-if="bookingInfo"
     >
       <h1 v-for="item in confirmationKeys" :key="item.label">
@@ -58,7 +62,7 @@
       </h1>
       <span slot="footer" class="dialog-footer">
         <el-button type="warning" @click="cancelDialog">Cancel</el-button>
-        <el-button type="primary" @click="confirmDialog">Confirm</el-button>
+        <el-button type="danger" @click="confirmDialog">Confirm</el-button>
       </span>
     </el-dialog>
   </div>
@@ -85,14 +89,15 @@ export default {
       selectedTimeSlot: {},
       dialogVisible: false,
       confirmationKeys: [
-        { label: "Day", value: "day_of_week" },
         { label: "Name", value: "name" },
-        { label: "Coach's time", value: "time", note: "timezone" },
+        { label: "Day", value: "day_of_week" },
         { label: "My time", value: "timezoneTime", note: "myTimezone" },
+        { label: "Coach's time", value: "time", note: "timezone" },
       ],
       cityOption: [
         "Australia/Sydney",
         "Australia/Melbourne",
+        "Australia/Brisbane",
         "Australia/Perth",
         "Australia/Adelaide",
         "Australia/Darwin",
@@ -101,6 +106,7 @@ export default {
       ],
       selectedLocation: "",
       availabilityStep: 30,
+      messageDuration: 1500,
     };
   },
   computed: {
@@ -145,10 +151,21 @@ export default {
     confirmDialog() {
       this.dialogVisible = false;
       localStorage.setItem("bookInfo", JSON.stringify(this.bookingInfo));
-      this.$message({
-        message: "Congrats",
+      //   this.$message({
+      //     message: "Congrats",
+      //     type: "primary",
+      //     duration: `${this.messageDuration}`,
+      //   });
+      this.$notify({
+        title: "Congrats",
+        //   message: 'Congrats',
         type: "success",
+        position: "bottom-right",
+        duration: `${this.messageDuration}`,
       });
+      setTimeout(() => {
+        this.$emit("back");
+      }, this.messageDuration);
     },
     cancelDialog() {
       this.dialogVisible = false;
@@ -162,9 +179,6 @@ export default {
     },
 
     //
-    back() {
-      this.$emit("back");
-    },
 
     bookCoach(e, time, timezoneTime) {
       let { name, timezone, day_of_week } = e;
@@ -213,6 +227,7 @@ export default {
 
 <style lang="scss" scoped>
 .table-head {
+  font-size: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -234,21 +249,5 @@ export default {
   & > * {
     flex-basis: 12%;
   }
-}
-.time-slot {
-  background: #a4a4a4;
-  border-radius: 10px;
-  cursor: pointer;
-  color: white;
-  font-weight: bold;
-  padding: 0.25rem 0;
-  margin: 1rem 0;
-}
-.selectedSlot {
-  background: aqua;
-}
-.confirmation {
-  border-radius: 10px;
-  border: 1px solid black;
 }
 </style>

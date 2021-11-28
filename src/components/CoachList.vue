@@ -1,15 +1,33 @@
 <template>
-  <div class="coach-list">
-    <div
-      v-for="coach in coachSimpleData"
-      :key="coach.name"
-      @click.stop="getCoach(coach)"
-      class="coach"
-    >
-      {{ coach.name }}
-      {{ coach.timezone }}
-      <div v-for="day in coach.availablity" :key="day">
-        {{ convertDay(day) }}
+  <div>
+    <h1>Available Coaches</h1>
+    <div class="coach-list">
+      <div
+        v-for="coach in coachSimpleData"
+        :key="coach.name"
+        @click="getCoach(coach)"
+        class="coach_card card pointer"
+      >
+        <font-awesome-icon icon="user" class="mx-2" />
+        <font-awesome-icon icon="calendar-alt" class="mx-2" />
+
+        <div class="coach_card-name">
+          {{ coach.name }}
+        </div>
+        <div class="coach_card-timezone">
+          {{ coach.timezone }}
+        </div>
+
+        <div class="coach_card-availability">
+          <el-col
+            v-for="day in coach.availability"
+            :key="day"
+            :span="3"
+            class="tag"
+          >
+            {{ convertDay(day) }}
+          </el-col>
+        </div>
       </div>
     </div>
   </div>
@@ -59,24 +77,42 @@ export default {
 
 <style scoped lang="scss">
 .coach {
-  cursor: pointer;
-  padding: 2rem 1rem;
-  border: 2px solid #c4c4c4;
-  border-radius: 10px;
-  width: 10vw;
-  margin: 0 auto;
-  transition: all 0.2s;
-  &:hover {
-    background: #d4d4d4;
-    transform: scale(1.1);
+  &_card {
+    transition: all 0.2s;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+
+    & > div {
+      text-align: left;
+    }
+    &:hover {
+      box-shadow: 2px 2px 10px #f4f4f4;
+      transform: scale(1.1);
+    }
+    &-name {
+      grid-column: 1/2;
+      grid-row: 2/3;
+    }
+    &-timezone {
+      grid-column: 1/2;
+      grid-row: 3/-1;
+    }
+    &-availability {
+      grid-column: 2/-1;
+      grid-row: 2/-1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 0.5rem;
+    }
   }
   &-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    grid-row-gap: 2rem;
+    grid-column-gap: 5rem;
     width: 50vw;
     margin: 0 auto;
-    background: #f4f4f4;
     padding: 4rem 0;
     border-radius: 10px;
   }

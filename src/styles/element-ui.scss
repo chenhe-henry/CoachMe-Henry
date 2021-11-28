@@ -1,0 +1,58 @@
+// cover some element-ui styles
+.el-button {
+  color: #000000;
+  font-weight: 600;
+}
+.el-header {
+  font-size: 2rem;
+  font-weight: bold;
+  background: #222d32;
+  height: unset !important;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+}
+.el-footer {
+  background: #222d32;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.el-container {
+  // background: mix(skyblue, rgb(208, 237, 208), 80%);
+}
+.el-card {
+  &:hover {
+    // background: #d4d4d4;
+    transform: scale(1.1);
+  }
+}
+
+.el-dialog__body {
+  text-align: left;
+  & > * {
+    margin: 0.5rem 0;
+  }
+}
+.el-dialog__header,
+.el-dialog__footer {
+  font-weight: bold;
+  padding: 20px;
+
+  // background: #36a2e0;
+}
+.el-dialog__title {
+  font-size: 2rem;
+  color: #ffffff;
+}
+.el-dialog__header {
+  text-align: left;
+  background: #36a2e0;
+}
+
+.el-main {
+  // background: linear-gradient(#eb4970, #f6880e);
+}

@@ -1,6 +1,11 @@
 <template>
   <el-container class="home">
-    <el-header>Coach Me</el-header>
+    <el-header>
+      <span>Coach Me</span>
+      <el-button type="info" @click="back" v-show="selectedCoach">
+        Back To List
+      </el-button>
+    </el-header>
     <el-main>
       <CoachList
         :coachSimpleData="coachSimpleData"
@@ -12,6 +17,11 @@
         :filteredData="filteredData"
         v-show="selectedCoach"
         @back="back"
+      />
+      <NextBooking
+        v-if="!selectedCoach && bookInfo"
+        :bookInfo="bookInfo"
+        @open="open"
       />
     </el-main>
     <el-footer>
@@ -28,6 +38,7 @@ export default {
   components: {
     CoachList: () => import("@/components/CoachList"),
     TimeTable: () => import("@/components/TimeTable.vue"),
+    NextBooking: () => import("@/components/NextBooking.vue"),
   },
   data() {
     return {
@@ -39,6 +50,12 @@ export default {
   },
   mounted() {
     this.init();
+    this.bookInfo = JSON.parse(localStorage.getItem("bookInfo"));
+  },
+  watch: {
+    selectedCoach() {
+      this.bookInfo = JSON.parse(localStorage.getItem("bookInfo"));
+    },
   },
   computed: {
     // filter coach data based on selected coach
@@ -56,19 +73,22 @@ export default {
     selectCoach(e) {
       this.selectedCoach = e;
     },
+    open(e) {
+      this.selectedCoach = e;
+    },
     back() {
       this.selectedCoach = null;
     },
     // restructure coach data based on filtered data
     getCoachInfo(obj) {
-      let availablity = [];
+      let availability = [];
       obj.forEach((e) => {
-        availablity.push(e["day_of_week"]);
+        availability.push(e["day_of_week"]);
       });
       return {
         name: obj[0].name,
         timezone: obj[0].timezone,
-        availablity: [...new Set(availablity)],
+        availability: [...new Set(availability)],
       };
     },
     // get simple coach data, pass to coach list,
