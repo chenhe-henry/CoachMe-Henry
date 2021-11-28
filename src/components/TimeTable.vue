@@ -2,7 +2,7 @@
   <div>
     <div>
       <div class="title">{{ selectedCoachInfo }}</div>
-      <div class="display">30 Minute Time Slots</div>
+      <div class="display">30 Minutes Time Slots</div>
       <!-- select time zone -->
       <div class="rightAlign">
         <span><font-awesome-icon icon="map-marker-alt" class="mx-2" /></span>
@@ -182,6 +182,10 @@ export default {
       };
       this.bookingInfo = bookInfo;
       let previousSlot = JSON.parse(localStorage.getItem("bookInfo"));
+      if (previousSlot) {
+        previousSlot.timezoneTime = this.timeTZ(previousSlot.time);
+        previousSlot.myTimezone = this.selectedLocation;
+      }
       if (JSON.stringify(previousSlot) === JSON.stringify(this.bookingInfo)) {
         this.bookingInfo = null;
         localStorage.removeItem("bookInfo");

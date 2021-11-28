@@ -1,7 +1,10 @@
 <template>
   <el-container class="home">
     <el-header>
-      <span>Coach Me</span>
+      <span class="pointer" @click="backToHome">
+        <font-awesome-icon :icon="['fab', 'connectdevelop']" class="mx-2" />
+        Coach Me
+      </span>
       <el-button type="info" @click="backToHome" v-show="selectedCoach">
         Back To List
       </el-button>

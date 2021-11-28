@@ -14,8 +14,16 @@ import {
   faMapMarkerAlt,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { faConnectdevelop } from "@fortawesome/free-brands-svg-icons";
 
-library.add(faCopyright, faClock, faMapMarkerAlt, faCalendarAlt, faUser);
+library.add(
+  faCopyright,
+  faClock,
+  faMapMarkerAlt,
+  faCalendarAlt,
+  faUser,
+  faConnectdevelop
+);
 Vue.config.productionTip = false;
 Vue.prototype.$moment = moment;
 Vue.component("font-awesome-icon", FontAwesomeIcon);
