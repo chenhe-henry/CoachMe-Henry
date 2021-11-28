@@ -1,7 +1,15 @@
 <template>
-  <div class="home">
-    <CoachList :coachSimpleData="coachSimpleData" @click="selectCoach" />
-  </div>
+  <el-container class="home">
+    <el-header>Coach Me</el-header>
+
+    <el-main>
+      <CoachList :coachSimpleData="coachSimpleData" @click="selectCoach" />
+    </el-main>
+    <el-footer
+      ><font-awesome-icon :icon="['far', 'copyright']" class="mx-2" /> 2021
+      Henry He, All Right Reserved.</el-footer
+    >
+  </el-container>
 </template>
 
 <script>
@@ -62,3 +70,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.home {
+  min-height: 100vh;
+}
+</style>
