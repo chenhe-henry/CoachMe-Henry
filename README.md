@@ -24,8 +24,6 @@ A simple coach booking application, which allows you to
 2. Check what 30-minutes slots are available to schedule with a particular coach;
 3. Book an appiontment with a coach at one of their available times.
 
-## Screenshots
-
 ## Features
 
 ### Check available coaches
